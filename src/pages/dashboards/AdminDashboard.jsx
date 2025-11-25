@@ -102,9 +102,9 @@ export default function AdminDashboard() {
   useEffect(() => {
     const load = async () => {
       try {
-        const d = await fetch("/api/donors", { credentials: "include" });
-        const r = await fetch("/api/recipients", { credentials: "include" });
-        const m = await fetch("/api/matches", { credentials: "include" });
+        const d = await fetch("http://localhost:5000/api/admin/donors", { credentials: "include" });
+        const r = await fetch("http://localhost:5000/api/admin/recipients", { credentials: "include" });
+        const m = await fetch("/api/matches/${matchId}/status", { credentials: "include" });
 
         setDonors(await d.json());
         setRecipients(await r.json());
