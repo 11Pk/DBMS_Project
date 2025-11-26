@@ -1,15 +1,36 @@
 import { pool } from '../config/db.js'
 
-export async function createDonor({ id, organ_type, availability, medical_history, status }) {
-  await pool.execute(
-    // `INSERT INTO Donors (id, organ_type, availability, medical_history, status)
-    //  VALUES (?, ?, ?, ?, ?)`,
+// export async function createDonor({ id, organ_type, availability, medical_history, status }) {
+//   // await pool.execute(
+//   //   // `INSERT INTO Donors (id, organ_type, availability, medical_history, status)
+//   //   //  VALUES (?, ?, ?, ?, ?)`,
+//   //   `INSERT INTO donors (user_id, age, blood_group, organ, medical_history, status)
+//   // VALUES (?, ?, ?, ?, ?, ?)`
+//   //   [id, organ_type, availability, medical_history, status],
+//   // )
+//   await pool.execute(
+//   `INSERT INTO donors (user_id, age, blood_group, organ, medical_history, status)
+//    VALUES (?, ?, ?, ?, ?, ?)`,
+//   [user_id, age, blood_group, organ, medical_history, status]
+// )
+
+//   return getDonorById(id)
+// }
+// export async function createDonor({ user_id, age, blood_group, organ, medical_history, status }) {
+//   return await pool.execute(
+//     `INSERT INTO donors (user_id, age, blood_group, organ, medical_history, status)
+//      VALUES (?, ?, ?, ?, ?, ?)`,
+//     [user_id, age, blood_group, organ, medical_history, status]
+//   )
+// }
+export async function createDonor({ user_id, age, blood_group, organ, medical_history, status }) {
+  return await pool.execute(
     `INSERT INTO donors (user_id, age, blood_group, organ, medical_history, status)
-  VALUES (?, ?, ?, ?, ?, ?)`
-    [id, organ_type, availability, medical_history, status],
-  )
-  return getDonorById(id)
+     VALUES (?, ?, ?, ?, ?, ?)`,
+    [user_id, age, blood_group, organ, medical_history, status]
+  );
 }
+
 
 export async function updateAvailability(id, availability) {
   await pool.execute(

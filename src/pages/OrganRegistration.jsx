@@ -332,6 +332,17 @@ export default function OrganRegistration() {
             ))}
           </select>
         </FormField>
+        <FormField label="Organ to Donate">
+  <input
+    name="organ"
+    required
+    value={form.organ}
+    onChange={handleChange}
+    placeholder="Kidney / Liver / Heart etc."
+    className="w-full rounded-lg border border-slate-200 px-3 py-2"
+  />
+</FormField>
+
 
         <FormField label="Availability status">
           <select
