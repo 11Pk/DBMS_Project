@@ -55,12 +55,6 @@ import { notFound, errorHandler } from './middleware/errorHandler.js'
 
 const app = express()
 
-<<<<<<< HEAD
-// Helmet configuration
-app.use(helmet({
-  crossOriginResourcePolicy: { policy: "cross-origin" }
-}))
-=======
 app.use(helmet())
 
 // CORS configuration - allow multiple frontend ports
@@ -71,15 +65,9 @@ const allowedOrigins = [
   'http://127.0.0.1:5173',
   'http://127.0.0.1:5174',
 ]
->>>>>>> cef92a6e1d40ea4ed8ad0ea70d4dbbc5d23bc503
 
 // CORS configuration - must be before routes
 app.use(cors({
-<<<<<<< HEAD
-  origin: 'http://localhost:5173',
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-=======
   origin: function (origin, callback) {
     // Allow requests with no origin (like mobile apps, curl, postman)
     if (!origin) return callback(null, true)
@@ -91,7 +79,6 @@ app.use(cors({
     }
   },
   credentials: true,                 // allow cookies, auth headers
->>>>>>> cef92a6e1d40ea4ed8ad0ea70d4dbbc5d23bc503
   allowedHeaders: ['Content-Type', 'Authorization']
 }))
 
@@ -109,11 +96,6 @@ app.get('/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: Date.now() })
 })
 
-<<<<<<< HEAD
-// API Routes
-=======
-
->>>>>>> cef92a6e1d40ea4ed8ad0ea70d4dbbc5d23bc503
 app.use('/api/auth', authRoutes)
 app.use('/api/donors', donorRoutes)
 app.use('/api/recipients', recipientRoutes)

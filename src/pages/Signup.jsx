@@ -134,14 +134,23 @@ export default function Signup() {
     setLoading(true)
 
     try {
+      // const data = await authService.register({
+      //   name: form.fullName,
+      //   email: form.email,
+      //   password: form.password,
+      //   role: form.role,
+      //   age: form.age ? parseInt(form.age) : null,
+      //   blood_group: form.blood_group || null,
+      // })
       const data = await authService.register({
-        name: form.fullName,
-        email: form.email,
-        password: form.password,
-        role: form.role,
-        age: form.age ? parseInt(form.age) : null,
-        blood_group: form.blood_group || null,
-      })
+  name: form.name,
+  email: form.email,
+  password: form.password,
+  role: form.role,
+  age: form.age ? parseInt(form.age) : null,
+  blood_group: form.blood_group || null,
+})
+
 
       if (data.success) {
         // Store token and user info

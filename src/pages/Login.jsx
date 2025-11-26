@@ -305,34 +305,12 @@ export default function Login() {
     setLoading(true)
 
     try {
-<<<<<<< HEAD
-      const res = await fetch('http://localhost:5000/api/auth/login', {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json'
-        },
-        credentials: 'include',
-        body: JSON.stringify({
-          email: form.email,
-          password: form.password
-        })
-      })
-
-      const data = await res.json()
-
-      if (!res.ok) {
-        throw new Error(data.error || 'Login failed')
-      }
-
-      if (data.success && data.data) {
-=======
       const data = await authService.login({
         email: form.email,
         password: form.password
       })
 
       if (data.success) {
->>>>>>> cef92a6e1d40ea4ed8ad0ea70d4dbbc5d23bc503
         // Store token and user info
         localStorage.setItem('token', data.data.token)
         localStorage.setItem('userId', data.data.user.id)

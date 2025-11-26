@@ -26,7 +26,7 @@ async function bootstrap() {
       console.log('\n⚠️  SIGTERM signal received: closing HTTP server')
       server.close(async () => {
         console.log('HTTP server closed')
-        await closePool()
+        // await closePool()
         process.exit(0)
       })
     })
@@ -35,7 +35,7 @@ async function bootstrap() {
       console.log('\n⚠️  SIGINT signal received: closing HTTP server')
       server.close(async () => {
         console.log('HTTP server closed')
-        await closePool()
+        // await closePool()
         process.exit(0)
       })
     })

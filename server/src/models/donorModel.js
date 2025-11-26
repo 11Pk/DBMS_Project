@@ -2,8 +2,10 @@ import { pool } from '../config/db.js'
 
 export async function createDonor({ id, organ_type, availability, medical_history, status }) {
   await pool.execute(
-    `INSERT INTO Donors (id, organ_type, availability, medical_history, status)
-     VALUES (?, ?, ?, ?, ?)`,
+    // `INSERT INTO Donors (id, organ_type, availability, medical_history, status)
+    //  VALUES (?, ?, ?, ?, ?)`,
+    `INSERT INTO donors (user_id, age, blood_group, organ, medical_history, status)
+  VALUES (?, ?, ?, ?, ?, ?)`
     [id, organ_type, availability, medical_history, status],
   )
   return getDonorById(id)
