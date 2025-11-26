@@ -1,17 +1,18 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { FormField, FormSection } from '../components/FormSection'
 import { Button } from '../components/ui/Button'
-import { recipientService } from '../services/recipientService'
 
 export default function OrganRequest() {
   const [form, setForm] = useState({
-    organNeeded: 'Kidney',
-    bloodType: 'O+',
-    urgency: 'High',
-    hospital: '',
-    notes: '',
+    organ_required: 'Kidney',
+    urgency: 'medium',
+    status: 'waiting'
   })
   const [response, setResponse] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const navigate = useNavigate()
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -20,8 +21,48 @@ export default function OrganRequest() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    const result = await recipientService.requestOrgan(form)
-    setResponse(result)
+    setLoading(true)
+    setError('')
+
+    try {
+      const token = localStorage.getItem('token')
+      
+      if (!token) {
+        throw new Error('No authentication token found. Please login again.')
+      }
+
+      const res = await fetch('http://localhost:5000/api/recipients/register', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        credentials: 'include',
+        body: JSON.stringify(form),
+      })
+
+      const data = await res.json()
+      
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to submit request')
+      }
+
+      setResponse({
+        message: 'Organ request submitted successfully!',
+        status: 'success'
+      })
+
+      // Redirect to dashboard after 2 seconds
+      setTimeout(() => {
+        navigate('/dashboard/recipient')
+      }, 2000)
+      
+    } catch (error) {
+      setError(error.message)
+      console.error('Error submitting request:', error)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -35,34 +76,31 @@ export default function OrganRequest() {
         </p>
       </div>
 
+      {error && (
+        <div className="rounded-lg bg-red-50 p-4 text-sm text-red-700">
+          {error}
+        </div>
+      )}
+
       <FormSection
         title="Recipient Details"
         description="Provide medical information for accurate matching."
         onSubmit={handleSubmit}
-        actions={<Button type="submit">Submit Request</Button>}
+        actions={
+          <Button type="submit" disabled={loading}>
+            {loading ? 'Submitting...' : 'Submit Request'}
+          </Button>
+        }
       >
         <FormField label="Organ needed">
           <select
-            name="organNeeded"
-            value={form.organNeeded}
+            name="organ_required"
+            value={form.organ_required}
             onChange={handleChange}
             className="w-full rounded-lg border border-slate-200 px-3 py-2 focus:border-brand-blue focus:outline-none focus:ring-2 focus:ring-brand-blue/30"
           >
             {['Kidney', 'Liver', 'Heart', 'Lung'].map((organ) => (
               <option key={organ}>{organ}</option>
-            ))}
-          </select>
-        </FormField>
-
-        <FormField label="Blood type">
-          <select
-            name="bloodType"
-            value={form.bloodType}
-            onChange={handleChange}
-            className="w-full rounded-lg border border-slate-200 px-3 py-2 focus:border-brand-blue focus:outline-none focus:ring-2 focus:ring-brand-blue/30"
-          >
-            {['O+', 'O-', 'A+', 'A-', 'B+', 'B-'].map((type) => (
-              <option key={type}>{type}</option>
             ))}
           </select>
         </FormField>
@@ -74,36 +112,31 @@ export default function OrganRequest() {
             onChange={handleChange}
             className="w-full rounded-lg border border-slate-200 px-3 py-2 focus:border-brand-blue focus:outline-none focus:ring-2 focus:ring-brand-blue/30"
           >
-            {['High', 'Medium', 'Low'].map((level) => (
-              <option key={level}>{level}</option>
-            ))}
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
           </select>
         </FormField>
 
-        <FormField label="Treatment hospital">
-          <input
-            name="hospital"
-            value={form.hospital}
+        <FormField label="Status">
+          <select
+            name="status"
+            value={form.status}
             onChange={handleChange}
             className="w-full rounded-lg border border-slate-200 px-3 py-2 focus:border-brand-blue focus:outline-none focus:ring-2 focus:ring-brand-blue/30"
-          />
-        </FormField>
-
-        <FormField label="Additional notes">
-          <textarea
-            name="notes"
-            value={form.notes}
-            onChange={handleChange}
-            className="w-full rounded-lg border border-slate-200 px-3 py-2 focus:border-brand-blue focus:outline-none focus:ring-2 focus:ring-brand-blue/30"
-            rows={4}
-          />
+          >
+            <option value="waiting">Waiting</option>
+            <option value="matched">Matched</option>
+            <option value="completed">Completed</option>
+          </select>
         </FormField>
       </FormSection>
 
       {response && (
-        <div className="rounded-2xl border border-blue-100 bg-blue-50/70 p-4 text-sm text-blue-700">
-          <p className="font-semibold">Request submitted</p>
+        <div className="rounded-2xl border border-emerald-100 bg-emerald-50/70 p-4 text-sm text-emerald-700">
+          <p className="font-semibold">✓ Request submitted successfully</p>
           <p>{response.message}</p>
+          <p className="mt-2 text-xs">Redirecting to your dashboard...</p>
         </div>
       )}
     </div>
