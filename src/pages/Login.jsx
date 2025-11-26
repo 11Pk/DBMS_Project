@@ -136,6 +136,7 @@ import Navbar from '../components/Navbar'
 import { Button } from '../components/ui/Button'
 import { FormField } from '../components/FormSection'
 import { useAuth, USER_ROLES } from '../context/AuthContext'
+import * as authService from '../services/authService'
 
 const rolePaths = {
   [USER_ROLES.DONOR]: '/dashboard/donor',
@@ -147,7 +148,6 @@ export default function Login() {
   const [form, setForm] = useState({
     email: '',
     password: '',
-    role: USER_ROLES.DONOR,
   })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
@@ -167,21 +167,10 @@ export default function Login() {
     setLoading(true)
 
     try {
-      const res = await fetch('http://localhost:5000/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({
-          email: form.email,
-          password: form.password
-        })
+      const data = await authService.login({
+        email: form.email,
+        password: form.password
       })
-
-      const data = await res.json()
-
-      if (!res.ok) {
-        throw new Error(data.error || 'Login failed')
-      }
 
       if (data.success) {
         // Store token and user info
