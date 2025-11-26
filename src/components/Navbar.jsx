@@ -2,15 +2,33 @@ import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { Button } from './ui/Button'
 
-const navLinks = [
-  { label: 'Home', to: '/' },
-  { label: 'Register', to: '/signup' },
-  { label: 'Login', to: '/login' },
-]
-
 export default function Navbar({ variant = 'solid' }) {
   const { user, logout } = useAuth()
   const location = useLocation()
+
+  // Define navigation links based on authentication status
+  const navLinks = user
+    ? [{ label: 'Home', to: '/' }]
+    : [
+        { label: 'Home', to: '/' },
+        { label: 'Register', to: '/signup' },
+        { label: 'Login', to: '/login' },
+      ]
+
+  // Get dashboard path based on user role
+  const getDashboardPath = () => {
+    if (!user) return '/login'
+    switch (user.role) {
+      case 'admin':
+        return '/dashboard/admin'
+      case 'donor':
+        return '/dashboard/donor'
+      case 'recipient':
+        return '/dashboard/recipient'
+      default:
+        return '/login'
+    }
+  }
 
   return (
     <header
@@ -48,6 +66,9 @@ export default function Navbar({ variant = 'solid' }) {
               <span className="hidden text-sm text-slate-500 md:inline">
                 {user.name} · {user.role}
               </span>
+              <Link to={getDashboardPath()}>
+                <Button variant="outline">Dashboard</Button>
+              </Link>
               <Button variant="ghost" onClick={logout}>
                 Logout
               </Button>
