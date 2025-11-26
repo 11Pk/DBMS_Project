@@ -274,6 +274,7 @@ import Navbar from '../components/Navbar'
 import { Button } from '../components/ui/Button'
 import { FormField } from '../components/FormSection'
 import { useAuth, USER_ROLES } from '../context/AuthContext'
+import * as authService from '../services/authService'
 
 const rolePaths = {
   [USER_ROLES.DONOR]: '/dashboard/donor',
@@ -304,6 +305,7 @@ export default function Login() {
     setLoading(true)
 
     try {
+<<<<<<< HEAD
       const res = await fetch('http://localhost:5000/api/auth/login', {
         method: 'POST',
         headers: { 
@@ -323,6 +325,14 @@ export default function Login() {
       }
 
       if (data.success && data.data) {
+=======
+      const data = await authService.login({
+        email: form.email,
+        password: form.password
+      })
+
+      if (data.success) {
+>>>>>>> cef92a6e1d40ea4ed8ad0ea70d4dbbc5d23bc503
         // Store token and user info
         localStorage.setItem('token', data.data.token)
         localStorage.setItem('userId', data.data.user.id)
